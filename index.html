@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Menu</title>
+    <!-- Link Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-Kfwz1wq5NpA6rXp5n7oNkkwHg04Wj5s6cZpU9p6g9BKCwbHNS+jET4TDfwKP0jeiqs7nbizFzg6UkxDdFTXKJw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            font-size: 16px;
+            background-color: #f4f4f4;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 50px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header img {
+            height: 50px;
+        }
+
+        .header .search {
+            display: flex;
+            align-items: center;
+        }
+
+        .header input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .header a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #0073ea;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header a i {
+            margin-right: 5px;
+        }
+
+        /* Menu */
+        .menu {
+            background-color: #2f5597;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .menu a:hover {
+            background-color: #1d3c6e;
+        }
+
+        .menu a i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Phần Header -->
+    <div class="header">
+        <div class="logo">
+            <img src="bet8689.png" alt="Logo">
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Tìm kiếm">
+            <a href="#"><i class="fas fa-calendar-alt"></i> Lịch tuần</a>
+            <a href="#"><i class="fas fa-envelope"></i> E-mail</a>
+            <a href="#"><i class="fas fa-phone"></i> Liên hệ</a>
+            <a href="#"><i class="fas fa-map"></i> Sơ đồ trang</a>
+        </div>
+    </div>
+
+    <!-- Thanh Menu Chính -->
+    <nav class="menu">
+        <a href="index.html"><i class="fas fa-home"></i> TRANG CHỦ</a>
+        <a href="#"><i class="fas fa-book"></i> CHƯƠNG TRÌNH ĐÀO TẠO</a>
+        <a href="#"><i class="fas fa-edit"></i> ĐĂNG KÍ</a>
+        <a href="#"><i class="fas fa-user-graduate"></i> SINH VIÊN</a>
+        <a href="#"><i class="fas fa-clipboard-check"></i> ĐÁNH GIÁ</a>
+        <a href="#"><i class="fas fa-wallet"></i> THÔNG TIN TÀI CHÍNH</a>
+        <a href="#"><i class="fas fa-info-circle"></i> THÔNG TIN</a>
+        <a href="#"><i class="fas fa-folder-open"></i> THỦ TỤC MỘT CỬA</a>
+        <a href="login.html"><i class="fas fa-sign-in-alt"></i> ĐĂNG NHẬP</a>
+    </nav>
+</body>
+</html>
+
