@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinh Viên - Nộp Học Phí</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 2rem;
+    }
+
+    .list {
+      margin-top: 2rem;
+    }
+
+    .list table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .list th, .list td {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .list th {
+      background-color: #f0f4fa;
+    }
+
+    .payment-section {
+      margin-top: 2rem;
+    }
+
+    .payment-section form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .payment-section label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .payment-section select, .payment-section button {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .payment-section button {
+      background-color: #0056b3;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .payment-section button:hover {
+      background-color: #003d80;
+    }
+
+    .success, .error {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    .navigation a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #fff;
+      background-color: #0056b3;
+      transition: background-color 0.3s;
+    }
+
+    .navigation a:hover {
+      background-color: #003d80;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hệ Thống Nộp Học Phí - Sinh Viên</h1>
+
+      
+
+    <!-- Danh sách môn học đã thanh toán -->
+    <div class="list">
+      <h2>Danh Sách Môn Học Đã Thanh Toán</h2>
+      <table id="paid-course-list">
+        <thead>
+          <tr>
+            <th>Tên Môn Học</th>
+            <th>Học Phí</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Danh sách môn học chưa thanh toán -->
+    <div class="list">
+      <h2>Danh Sách Môn Học Chưa Thanh Toán</h2>
+      <table id="unpaid-course-list">
+        <thead>
+          <tr>
+            <th>Tên Môn Học</th>
+            <th>Học Phí</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+        </tbody>
+      </table>
+      <p class="total" id="total-fee">Tổng số tiền: 0 VND</p>
+    </div>  
+    
+
+    <!-- Thanh toán học phí -->
+    <div class="payment-section">
+      <h2>Thanh Toán Học Phí</h2>
+      <form id="payment-form">
+        <label for="payment-method">Chọn Phương Thức Thanh Toán:</label>
+        <select id="payment-method" required>
+          <option value="">-- Chọn phương thức thanh toán --</option>
+          <option value="credit-card">Thẻ Tín Dụng/Ghi Nợ</option>
+          <option value="momo">Ví MoMo</option>
+          <option value="bank-transfer">Chuyển Khoản Ngân Hàng</option>
+        </select>
+
+        <button type="submit">Thanh Toán</button>
+      </form>
+      <p id="payment-message" class="success"></p>
+    </div>
+    <div class="navigation">
+      <a href="naptien.html">Tới Trang Nạp Tiền</a>
+    </div>
+  </div>
+
+  
+  <script>
+    // Tải danh sách môn học của sinh viên
+    async function loadCourses() {
+      try {
+        const response = await fetch("http://localhost:3000/student/courses");
+        const data = await response.json();
+
+        if (response.ok) {
+          const courseListBody = document.querySelector("#course-list tbody");
+          const totalFeeElement = document.getElementById("total-fee");
+          let totalFee = 0;
+
+          courseListBody.innerHTML = ""; // Clear table before populating
+
+          data.courses.forEach(course => {
+            totalFee += course.paid ? 0 : course.fee;
+
+            courseListBody.innerHTML += `
+              <tr>
+                <td>${course.name}</td>
+                <td>${course.fee.toLocaleString()} VND</td>
+                <td>${course.paid ? "Đã thanh toán" : "Chưa thanh toán"}</td>
+              </tr>
+            `;
+          });
+
+          totalFeeElement.textContent = `Tổng số tiền: ${totalFee.toLocaleString()} VND`;
+        }
+      } catch (error) {
+        console.error("Error loading courses:", error);
+      }
+    }
+
+    // Xử lý thanh toán
+    document.getElementById("payment-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const paymentMethod = document.getElementById("payment-method").value;
+
+      if (!paymentMethod) {
+        document.getElementById("payment-message").textContent = "Vui lòng chọn phương thức thanh toán!";
+        document.getElementById("payment-message").classList.remove("success");
+        document.getElementById("payment-message").classList.add("error");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/student/pay", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentMethod }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("payment-message").textContent = "Thanh toán thành công!";
+          document.getElementById("payment-message").classList.remove("error");
+          document.getElementById("payment-message").classList.add("success");
+          loadCourses();
+        } else {
+          document.getElementById("payment-message").textContent = data.message;
+          document.getElementById("payment-message").classList.remove("success");
+          document.getElementById("payment-message").classList.add("error");
+        }
+      } catch (error) {
+        document.getElementById("payment-message").textContent = "Có lỗi xảy ra. Vui lòng thử lại sau!";
+        document.getElementById("payment-message").classList.remove("success");
+        document.getElementById("payment-message").classList.add("error");
+      }
+    });
+
+    // Khởi chạy khi tải trang
+    loadCourses();
+  </script>
+</body>
+</html>

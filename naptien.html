@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nạp Tiền - Sinh Viên</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 2rem;
+    }
+
+    .balance {
+      text-align: right;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0056b3;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #003d80;
+    }
+
+    .success, .error {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+    
+    .navigation a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      color: #fff;
+      background-color: #0056b3;
+      transition: background-color 0.3s;
+    }
+
+    .navigation a:hover {
+      background-color: #003d80;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="balance" id="account-balance">Số dư: 0 VND</div>
+    <h1>Nạp Tiền</h1>
+    <form id="topup-form">
+      <label for="student-id">ID Sinh Viên:</label>
+      <input type="text" id="student-id" name="student-id" required placeholder="Nhập ID sinh viên">
+
+      <label for="amount">Số Tiền Nạp:</label>
+      <input type="number" id="amount" name="amount" required placeholder="Nhập số tiền nạp">
+
+      <label for="payment-method">Phương Thức Thanh Toán:</label>
+      <select id="payment-method" name="payment-method" required>
+        <option value="">Chọn phương thức thanh toán</option>
+        <option value="bank">Ngân Hàng</option>
+        <option value="momo">Momo</option>
+        <option value="zalo">ZaloPay</option>
+      </select>
+
+      <button type="submit">Nạp Tiền</button>
+    </form>
+
+    <p id="topup-message" class="success"></p>
+    <div class="navigation">
+        <a href="student.html">Quay lại Trang Chính</a>
+  </div>
+
+  <script>
+    async function fetchBalance(studentId) {
+      try {
+        const response = await fetch(`http://localhost:3000/student/balance?studentId=${studentId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("account-balance").textContent = `Số dư: ${data.balance} VND`;
+        } else {
+          document.getElementById("account-balance").textContent = "Số dư: không thể tải";
+        }
+      } catch (error) {
+        document.getElementById("account-balance").textContent = "Số dư: không thể tải";
+      }
+    }
+
+    document.getElementById("topup-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const studentId = document.getElementById("student-id").value;
+      const amount = document.getElementById("amount").value;
+      const paymentMethod = document.getElementById("payment-method").value;
+
+      try {
+        const response = await fetch("http://localhost:3000/student/topup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ studentId, amount, paymentMethod }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("topup-message").textContent = "Nạp tiền thành công!";
+          document.getElementById("topup-message").classList.remove("error");
+          document.getElementById("topup-message").classList.add("success");
+          fetchBalance(studentId); // Update balance after topup
+        } else {
+          document.getElementById("topup-message").textContent = data.message;
+          document.getElementById("topup-message").classList.remove("success");
+          document.getElementById("topup-message").classList.add("error");
+        }
+      } catch (error) {
+        document.getElementById("topup-message").textContent = "Có lỗi xảy ra. Vui lòng thử lại sau!";
+        document.getElementById("topup-message").classList.remove("success");
+        document.getElementById("topup-message").classList.add("error");
+      }
+    });
+
+    document.getElementById("student-id").addEventListener("input", function () {
+      const studentId = this.value;
+      if (studentId) {
+        fetchBalance(studentId);
+      } else {
+        document.getElementById("account-balance").textContent = "Số dư: không xác định";
+      }
+    });
+  </script>
+</body>
+</html>

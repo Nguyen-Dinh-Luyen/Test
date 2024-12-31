@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giáo Viên - Quản Lý Học Phí</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section h2 {
+      color: #0056b3;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0056b3;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #003d80;
+    }
+
+    .success, .error {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 0.8rem;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #0056b3;
+      color: #fff;
+    }
+
+    .action-icons {
+      cursor: pointer;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hệ Thống Quản Lý - Giáo Viên</h1>
+    <!-- Thêm tài khoản sinh viên -->
+    <div class="action">
+    <h2>Thêm Tài Khoản Sinh Viên</h2>
+    <form id="add-student-form">
+        <label for="student-username">Tên đăng nhập:</label>
+        <input type="text" id="student-username" required placeholder="Nhập tên đăng nhập">
+
+        <label for="student-password">Mật khẩu:</label>
+        <input type="password" id="student-password" required placeholder="Nhập mật khẩu">
+
+        <button type="submit">Thêm Sinh Viên</button>
+      </form>
+      <p id="add-student-message" class="success"></p>
+</div>
+
+    <!-- Tạo Môn Học -->
+    <div class="section">
+      <h2>Tạo Môn Học</h2>
+      <form id="create-course-form">
+        <label for="course-id">ID Môn Học:</label>
+        <input type="text" id="course-id" name="course-id" required placeholder="Nhập ID môn học">
+
+        <label for="course-name">Tên Môn Học:</label>
+        <input type="text" id="course-name" name="course-name" required placeholder="Nhập tên môn học">
+
+        <label for="course-credits">Số Tín Chỉ:</label>
+        <input type="number" id="course-credits" name="course-credits" required placeholder="Nhập số tín chỉ">
+
+        <label for="course-fee">Học Phí:</label>
+        <input type="number" id="course-fee" name="course-fee" required placeholder="Nhập học phí">
+
+        <button type="submit">Tạo Môn Học</button>
+      </form>
+      <p id="create-course-message" class="success"></p>
+    </div>
+
+    <!-- Thêm Môn Học Cho Sinh Viên -->
+    <div class="section">
+      <h2>Thêm Môn Học Cho Sinh Viên</h2>
+      <form id="assign-course-form">
+        <label for="student-id">ID Sinh Viên:</label>
+        <input type="text" id="student-id" name="student-id" required placeholder="Nhập ID sinh viên">
+
+        <label for="course-id">ID Môn Học:</label>
+        <input type="text" id="course-id" name="course-id" required placeholder="Nhập ID môn học">
+
+        <button type="submit">Thêm Môn Học</button>
+      </form>
+      <p id="assign-course-message" class="success"></p>
+    </div>
+    
+    <!-- Xem Danh Sách Môn Học -->
+    <div class="section">
+      <h2>Danh Sách Môn Học</h2>
+      <table id="course-list">
+        <thead>
+          <tr>
+            <th>ID Môn Học</th>
+            <th>Tên Môn Học</th>
+            <th>Số tín chỉ</th>
+            <th>Học Phí</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Nội dung sẽ được thêm động bằng JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Xem Danh Sách Tài Khoản -->
+    <div class="section">
+      <h2>Danh Sách Tài Khoản</h2>
+      <table id="user-list">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên Người Dùng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Nội dung sẽ được thêm động bằng JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Thêm tài khoản sinh viên
+    document.getElementById("add-student-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("student-username").value;
+      const password = document.getElementById("student-password").value;
+
+      try {
+        const response = await fetch("http://localhost:8080/teacher/add-student", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById("add-student-message").textContent = "Thêm sinh viên thành công!";
+        } else {
+          document.getElementById("add-student-message").textContent = data.message;
+        }
+      } catch (error) {
+        document.getElementById("add-student-message").textContent = "Có lỗi xảy ra. Vui lòng thử lại sau!";
+      }
+    });
+
+    // Tải danh sách môn học từ API
+    async function loadCourses() {
+      const response = await fetch("http://localhost:3000/teacher/courses");
+      const courses = await response.json();
+
+      const tbody = document.querySelector("#course-list tbody");
+      tbody.innerHTML = "";
+      courses.forEach(course => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${course.id}</td>
+          <td>${course.name}</td>
+          <td>${course.fee}</td>
+          <td><span class="action-icons" onclick="deleteCourse(${course.id})">🗑️</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Tải danh sách tài khoản từ API
+    async function loadUsers() {
+      const response = await fetch("http://localhost:3000/teacher/users");
+      const users = await response.json();
+
+      const tbody = document.querySelector("#user-list tbody");
+      tbody.innerHTML = "";
+      users.forEach(user => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>${user.role}</td>
+          <td><span class="action-icons" onclick="deleteUser(${user.id})">🗑️</span></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Xóa môn học
+    async function deleteCourse(courseId) {
+      if (!confirm("Bạn có chắc muốn xóa môn học này?")) return;
+
+      const response = await fetch(`http://localhost:3000/teacher/delete-course`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: courseId })
+      });
+
+      if (response.ok) {
+        alert("Xóa môn học thành công!");
+        loadCourses();
+      } else {
+        alert("Không thể xóa môn học. Vui lòng thử lại.");
+      }
+    }
+
+    // Xóa người dùng
+    async function deleteUser(userId) {
+      if (!confirm("Bạn có chắc muốn xóa người dùng này?")) return;
+
+      const response = await fetch(`http://localhost:3000/teacher/delete-user`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: userId })
+      });
+
+      if (response.ok) {
+        alert("Xóa người dùng thành công!");
+        loadUsers();
+      } else {
+        alert("Không thể xóa người dùng. Vui lòng thử lại.");
+      }
+    }
+
+    // Khởi chạy tải dữ liệu ban đầu
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCourses();
+      loadUsers();
+    });
+  </script>
+</body>
+</html>
